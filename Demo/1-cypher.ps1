@@ -29,10 +29,10 @@ Nodes and relationships
 Import-Module PSNeo4j -Force
 
 # Set initial password and psneo4j config
-$Password = ConvertTo-SecureString -String "some secure password" -AsPlainText -Force
-$Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList neo4j, $Password
+$CredentialName = 'DBAdmin'
+$Credential = Get-StoredCredential -CredName $CredentialName
 Set-Neo4jPassword -Password $Credential.Password
-Set-PSNeo4jConfiguration -Credential $Credential -BaseUri 'http://192.168.99.100:7474' # 'http://127.0.0.1:7474'
+Set-PSNeo4jConfiguration  -Credential $Credential -BaseUri 'http://192.168.99.100:7474' # 'http://127.0.0.1:7474'
 
 # all nodes
 Invoke-Neo4jQuery -Query @"

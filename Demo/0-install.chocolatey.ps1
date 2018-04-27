@@ -9,11 +9,18 @@ choco install neo4j-community -y
 
 # Get PSNeo4j
 Install-Module PSNeo4j -Force
+Install-Module StoredPSCredential -Force
 Import-Module PSNeo4j -Force
+Import-Module StoredPSCredential -Force
 
 # Set initial password and psneo4j config
-$Password = ConvertTo-SecureString -String "some secure password" -AsPlainText -Force
-$Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList neo4j, $Password
+$CredentialName = 'DBAdmin'
+
+if ((Read-StoredCredentialList) -notcontains $CredentialName){
+	Initialize-StoredCredential -CredName $CredentialName
+}
+$Credential = Get-StoredCredential -CredName $CredentialName
+
 Set-Neo4jPassword -Password $Credential.Password
 Set-PSNeo4jConfiguration  -Credential $Credential
 
